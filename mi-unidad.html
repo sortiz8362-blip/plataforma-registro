@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Unidad - SAOV Cloud</title>
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/drive.css">
+    <link rel="stylesheet" href="styles/notificaciones.css">
+</head>
+<body>
+    <div class="contenedor-drive" style="display: none;" id="interfaz-drive">
+        
+        <aside class="sidebar">
+            <div class="logo-drive">☁️ SAOV Cloud</div>
+            
+            <button class="boton-nuevo" id="btn-subir-archivo">☁️ Subir Archivo</button>
+            <input type="file" id="input-archivo-oculto" style="display: none;">
+            
+            <ul class="menu-navegacion">
+                <li><a href="#" class="activo">📁 Mi Unidad</a></li>
+                <li><a href="#">🗑️ Papelera</a></li>
+            </ul>
+        </aside>
+
+        <main class="area-principal">
+            <header class="cabecera-drive">
+                <a href="perfil-usuario.html" class="perfil-usuario-mini">
+                    <span id="nombre-usuario-nav">Cargando...</span> ⚙️
+                </a>
+            </header>
+
+            <section class="contenido-drive">
+                <h2 class="titulo-seccion">Mis Archivos</h2>
+                
+                <div class="grid-archivos" id="contenedor-archivos">
+                    <p style="color: #64748b;">Aún no has subido ningún archivo.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { ID } from "https://cdn.jsdelivr.net/npm/appwrite@14.0.0/+esm";
+        window.AppwriteID = ID; // Lo hacemos global para usarlo en nuestro script
+    </script>
+    <script type="module" src="scripts/appwrite-drive.js"></script>
+</body>
+</html>

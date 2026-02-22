@@ -27,7 +27,7 @@ formularioLogin.addEventListener('submit', async (evento) => {
         const usuario = await cuentaUsuario.get();
         if (usuario.emailVerification === true) {
             mostrarNotificacion("¡Inicio de sesión exitoso!", "exito");
-            setTimeout(() => { window.location.href = "home.html"; }, 1500);
+            setTimeout(() => { window.location.href = "mi-unidad.html"; }, 1500);
         } else {
             mostrarNotificacion("Tu correo aún no ha sido verificado. Revisa tu bandeja.", "error");
             await cuentaUsuario.deleteSession('current');
@@ -82,7 +82,7 @@ formulario2FA.addEventListener('submit', async (evento) => {
         const usuario = await cuentaUsuario.get();
         if (usuario.emailVerification === true) {
             mostrarNotificacion("¡Verificación completada con éxito!", "exito");
-            setTimeout(() => { window.location.href = "home.html"; }, 1500);
+            setTimeout(() => { window.location.href = "mi-unidad.html"; }, 1500);
         } else {
             mostrarNotificacion("Tu correo no ha sido verificado.", "error");
             await cuentaUsuario.deleteSession('current');
