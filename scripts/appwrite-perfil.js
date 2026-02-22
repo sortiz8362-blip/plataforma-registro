@@ -16,22 +16,19 @@ const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
 // Función que arranca al abrir la página
 async function cargarPerfil() {
     try {
-        // 1. Obtenemos los datos del usuario logueado
         const usuario = await cuentaUsuario.get();
         
-        // Llenamos la interfaz con sus datos
         spanNombre.innerText = usuario.name;
         spanCorreo.innerText = usuario.email;
 
-        // 2. Verificamos si ya tiene el 2FA activado (mfa = Multi-Factor Authentication)
+        // Verificamos si ya tiene el 2FA activado
         if (usuario.mfa) {
             badge2fa.innerText = "Activo";
             badge2fa.className = "etiqueta-estado estado-activo";
-            btnIniciar2FA.style.display = "none"; // Ocultamos el botón porque ya está activo
+            btnIniciar2FA.style.display = "none";
         }
 
     } catch (error) {
-        // Si hay error (ej. no ha iniciado sesión), lo mandamos al login
         console.error("No hay sesión activa:", error);
         window.location.href = "sign-in.html";
     }
@@ -43,15 +40,14 @@ btnIniciar2FA.addEventListener('click', async () => {
         btnIniciar2FA.innerText = "Generando código...";
         btnIniciar2FA.disabled = true;
 
-        // Le pedimos a Appwrite que prepare el 2FA (tipo TOTP = contraseñas temporales)
-        const autenticador = await cuentaUsuario.createAuthenticator('totp');
+        // CORRECCIÓN: El nombre correcto de la función en Appwrite v14
+        const autenticador = await cuentaUsuario.createMfaAuthenticator('totp');
         
-        // Appwrite nos da un 'uri'. Lo convertimos a imagen QR usando una API pública y gratuita
+        // Convertimos el URI a imagen QR
         const urlImagenQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(autenticador.uri)}`;
         
         imagenQR.src = urlImagenQR;
         
-        // Ocultamos el botón y mostramos la zona del QR
         btnIniciar2FA.style.display = "none";
         contenedorQR.style.display = "block";
         
@@ -77,10 +73,13 @@ btnConfirmar2FA.addEventListener('click', async () => {
         btnConfirmar2FA.innerText = "Verificando...";
         btnConfirmar2FA.disabled = true;
 
-        // Le mandamos el código a Appwrite para que confirme que escaneamos bien el QR
-        await cuentaUsuario.verifyAuthenticator('totp', codigoSecreto);
+        // CORRECCIÓN: Verificamos el código con el nombre correcto de la función
+        await cuentaUsuario.verifyMfaAuthenticator('totp', codigoSecreto);
 
-        // Si todo sale bien, actualizamos la interfaz
+        // Activamos la seguridad de Doble Factor en la cuenta
+        await cuentaUsuario.updateMfa(true);
+
+        // Actualizamos la interfaz
         contenedorQR.style.display = "none";
         badge2fa.innerText = "Activo";
         badge2fa.className = "etiqueta-estado estado-activo";

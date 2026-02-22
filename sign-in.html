@@ -10,8 +10,8 @@
 </head>
 <body class="body-auth">
     <main class="contenedor-auth">
-        <h1>Accede a tu cuenta</h1>
-        <p class="subtitulo">Ingresa tus credenciales para continuar</p>
+        <h1 id="titulo-login">Accede a tu cuenta</h1>
+        <p id="subtitulo-login" class="subtitulo">Ingresa tus credenciales para continuar</p>
         
         <form id="formulario-login" class="formulario">
             <div class="grupo-input">
@@ -31,7 +31,20 @@
             <button type="submit" class="boton-principal">Iniciar Sesión</button>
         </form>
 
-        <div class="enlaces-extra">
+        <form id="formulario-2fa" class="formulario" style="display: none;">
+            <div class="grupo-input">
+                <label for="codigo-2fa-login" style="text-align: center;">Código de Seguridad (App)</label>
+                <input type="text" id="codigo-2fa-login" placeholder="123456" required maxlength="6" style="text-align: center; letter-spacing: 8px; font-weight: bold; font-size: 20px;">
+            </div>
+            
+            <button type="submit" class="boton-principal" id="btn-verificar-2fa">Verificar Código</button>
+            
+            <div style="margin-top: 15px;">
+                <a href="#" id="btn-cancelar-2fa" class="enlace-secundario" style="font-size: 13px;">Cancelar y volver</a>
+            </div>
+        </form>
+
+        <div id="caja-enlaces-extra" class="enlaces-extra">
             <a href="home.html" class="enlace-secundario">Volver al Inicio</a>
             <p>¿No tienes cuenta? <a href="sign-up.html" class="enlace-destacado">Regístrate</a></p>
         </div>
