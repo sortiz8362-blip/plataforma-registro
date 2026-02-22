@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil y Seguridad</title>
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="styles/notificaciones.css">
+    <style>
+        /* Estilos específicos para la zona del QR en el perfil */
+        .caja-seguridad {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #cbd5e1;
+            text-align: left;
+        }
+        .info-usuario {
+            background-color: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        #contenedor-qr {
+            display: none; /* Oculto hasta que el usuario decida activarlo */
+            text-align: center;
+            margin-top: 15px;
+        }
+        #imagen-qr {
+            border: 4px solid #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .etiqueta-estado {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .estado-inactivo { background-color: #ef4444; }
+        .estado-activo { background-color: #10b981; }
+    </style>
+</head>
+<body class="body-auth">
+    <main class="contenedor-auth">
+        <h1>Mi Perfil</h1>
+        <p class="subtitulo">Gestiona tu información y seguridad</p>
+
+        <div class="info-usuario">
+            <p><strong>Nombre:</strong> <span id="perfil-nombre">Cargando...</span></p>
+            <p><strong>Correo:</strong> <span id="perfil-correo">Cargando...</span></p>
+            <p style="margin-top: 10px;">
+                <strong>Estado 2FA:</strong> 
+                <span id="badge-2fa" class="etiqueta-estado estado-inactivo">Inactivo</span>
+            </p>
+        </div>
+        
+        <div class="caja-seguridad">
+            <h3 style="font-size: 16px; margin-bottom: 10px; color: #0f172a;">Autenticación en Dos Pasos (2FA)</h3>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Añade una capa extra de seguridad a tu cuenta usando una app como Google Authenticator.</p>
+            
+            <button id="btn-iniciar-2fa" class="boton-acceso" style="width: 100%;">Configurar 2FA</button>
+
+            <div id="contenedor-qr">
+                <img id="imagen-qr" src="" alt="Código QR para 2FA">
+                <p style="font-size: 13px; color: #475569; margin-bottom: 10px;">Escanea este código con tu aplicación y escribe el número de 6 dígitos abajo:</p>
+                
+                <div class="grupo-input">
+                    <input type="text" id="codigo-2fa" placeholder="Ej: 123456" maxlength="6" style="text-align: center; letter-spacing: 4px; font-weight: bold; font-size: 18px;">
+                </div>
+                
+                <button id="btn-confirmar-2fa" class="boton-principal" style="width: 100%;">Verificar y Activar</button>
+            </div>
+        </div>
+
+        <div class="enlaces-extra">
+            <a href="home.html" class="enlace-secundario">Volver al Inicio</a>
+            <p><a href="#" id="btn-cerrar-sesion" class="enlace-destacado" style="color: #ef4444;">Cerrar Sesión</a></p>
+        </div>
+    </main>
+
+    <script type="module" src="scripts/appwrite-perfil.js"></script>
+</body>
+</html>
