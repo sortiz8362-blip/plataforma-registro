@@ -20,37 +20,44 @@ formularioLogin.addEventListener('submit', async (evento) => {
     try {
         try { await cuentaUsuario.deleteSession('current'); } catch (e) {}
 
-        const sesion = await cuentaUsuario.createEmailPasswordSession(correo, clave);
+        // Intentamos iniciar sesión. Si el usuario TIENE 2FA, Appwrite frenará aquí mismo y saltará al 'catch'
+        await cuentaUsuario.createEmailPasswordSession(correo, clave);
 
-        if (sesion.mfa) {
-            // Generamos el desafío para la app de Autenticador (totp)
-            const reto = await cuentaUsuario.createMfaChallenge('totp');
-            retoMfaId = reto.$id; 
-
-            formularioLogin.style.display = 'none';
-            cajaEnlaces.style.display = 'none';
-            tituloLogin.innerText = "Autenticación 2FA";
-            subtituloLogin.innerText = "Abre tu app y escribe el código de 6 dígitos.";
-            
-            document.querySelector('label[for="codigo-2fa-login"]').innerText = "Código de Seguridad (App)";
-            
-            formulario2FA.style.display = 'flex';
-            
-            mostrarNotificacion("Se requiere código de seguridad.", "info");
-            return; 
-        }
-
+        // Si el código llega a esta línea, significa que el usuario NO tiene 2FA activado.
         const usuario = await cuentaUsuario.get();
         if (usuario.emailVerification === true) {
             mostrarNotificacion("¡Inicio de sesión exitoso!", "exito");
             setTimeout(() => { window.location.href = "home.html"; }, 1500);
         } else {
-            mostrarNotificacion("Tu correo aún no ha sido verificado.", "error");
+            mostrarNotificacion("Tu correo aún no ha sido verificado. Revisa tu bandeja.", "error");
             await cuentaUsuario.deleteSession('current');
         }
 
     } catch (error) {
-        mostrarNotificacion(traducirError(error.message), "error");
+        // AQUÍ ESTÁ LA MAGIA: Interceptamos el bloqueo de seguridad de Appwrite
+        if (error.message.includes("More factors are required")) {
+            try {
+                // Generamos el desafío para la app de Autenticador (totp)
+                const reto = await cuentaUsuario.createMfaChallenge('totp');
+                retoMfaId = reto.$id; 
+
+                // Cambiamos el diseño (UI) sin recargar la página
+                formularioLogin.style.display = 'none';
+                cajaEnlaces.style.display = 'none';
+                tituloLogin.innerText = "Autenticación 2FA";
+                subtituloLogin.innerText = "Abre tu app y escribe el código de 6 dígitos.";
+                document.querySelector('label[for="codigo-2fa-login"]').innerText = "Código de Seguridad (App)";
+                
+                formulario2FA.style.display = 'flex';
+                
+                mostrarNotificacion("Se requiere código de seguridad.", "info");
+            } catch (errReto) {
+                mostrarNotificacion("Error al preparar el 2FA.", "error");
+            }
+        } else {
+            // Si es un error distinto (ej. contraseña equivocada), lo mostramos traducido
+            mostrarNotificacion(traducirError(error.message), "error");
+        }
     }
 });
 
@@ -60,7 +67,7 @@ formulario2FA.addEventListener('submit', async (evento) => {
     const codigo = document.getElementById('codigo-2fa-login').value;
 
     if (codigo.length !== 6) {
-        mostrarNotificacion("El código debe tener 6 dígitos.", "error");
+        mostrarNotificacion("El código debe tener exactamente 6 dígitos.", "error");
         return;
     }
 
@@ -68,8 +75,10 @@ formulario2FA.addEventListener('submit', async (evento) => {
         btnVerificar2FA.innerText = "Verificando...";
         btnVerificar2FA.disabled = true;
 
+        // Le enviamos el código final a Appwrite
         await cuentaUsuario.updateMfaChallenge(retoMfaId, codigo);
 
+        // Si pasa, validamos el correo por última vez por seguridad
         const usuario = await cuentaUsuario.get();
         if (usuario.emailVerification === true) {
             mostrarNotificacion("¡Verificación completada con éxito!", "exito");
@@ -80,10 +89,10 @@ formulario2FA.addEventListener('submit', async (evento) => {
         }
 
     } catch (error) {
-        mostrarNotificacion("Código incorrecto o expirado.", "error");
+        mostrarNotificacion("Código incorrecto o expirado. Intenta de nuevo.", "error");
         btnVerificar2FA.innerText = "Verificar Código";
         btnVerificar2FA.disabled = false;
-        document.getElementById('codigo-2fa-login').value = '';
+        document.getElementById('codigo-2fa-login').value = ''; 
     }
 });
 
