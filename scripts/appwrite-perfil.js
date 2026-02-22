@@ -1,7 +1,6 @@
 import { cuentaUsuario } from './auth.js';
 import { mostrarNotificacion, traducirError } from './notificaciones.js';
 
-// Elementos de la interfaz
 const spanNombre = document.getElementById('perfil-nombre');
 const spanCorreo = document.getElementById('perfil-correo');
 const badge2fa = document.getElementById('badge-2fa');
@@ -13,7 +12,9 @@ const inputCodigo = document.getElementById('codigo-2fa');
 const btnConfirmar2FA = document.getElementById('btn-confirmar-2fa');
 const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
 
-// Función que arranca al abrir la página
+// NUEVO: Seleccionamos el elemento donde pondremos la clave de texto
+const textoClaveSecreta = document.getElementById('texto-clave-secreta');
+
 async function cargarPerfil() {
     try {
         const usuario = await cuentaUsuario.get();
@@ -21,37 +22,34 @@ async function cargarPerfil() {
         spanNombre.innerText = usuario.name;
         spanCorreo.innerText = usuario.email;
 
-        // Verificamos si ya tiene el 2FA activado
         if (usuario.mfa) {
             badge2fa.innerText = "Activo";
             badge2fa.className = "etiqueta-estado estado-activo";
             btnIniciar2FA.style.display = "none";
         }
-
     } catch (error) {
         console.error("No hay sesión activa:", error);
         window.location.href = "sign-in.html";
     }
 }
 
-// Evento: Botón para generar el QR
 btnIniciar2FA.addEventListener('click', async () => {
     try {
         btnIniciar2FA.innerText = "Generando código...";
         btnIniciar2FA.disabled = true;
 
-        // CORRECCIÓN: El nombre correcto de la función en Appwrite v14
         const autenticador = await cuentaUsuario.createMfaAuthenticator('totp');
         
-        // Convertimos el URI a imagen QR
         const urlImagenQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(autenticador.uri)}`;
-        
         imagenQR.src = urlImagenQR;
+        
+        // NUEVO: Extraemos la clave secreta (secret) y la mostramos en la pantalla
+        textoClaveSecreta.innerText = autenticador.secret;
         
         btnIniciar2FA.style.display = "none";
         contenedorQR.style.display = "block";
         
-        mostrarNotificacion("Código generado. Escanéalo con tu celular.", "info");
+        mostrarNotificacion("Escanea el QR o copia la clave manual.", "info");
 
     } catch (error) {
         btnIniciar2FA.innerText = "Configurar 2FA";
@@ -60,7 +58,6 @@ btnIniciar2FA.addEventListener('click', async () => {
     }
 });
 
-// Evento: Botón para confirmar el código de 6 dígitos
 btnConfirmar2FA.addEventListener('click', async () => {
     const codigoSecreto = inputCodigo.value;
 
@@ -73,13 +70,9 @@ btnConfirmar2FA.addEventListener('click', async () => {
         btnConfirmar2FA.innerText = "Verificando...";
         btnConfirmar2FA.disabled = true;
 
-        // CORRECCIÓN: Verificamos el código con el nombre correcto de la función
         await cuentaUsuario.verifyMfaAuthenticator('totp', codigoSecreto);
-
-        // Activamos la seguridad de Doble Factor en la cuenta
         await cuentaUsuario.updateMfa(true);
 
-        // Actualizamos la interfaz
         contenedorQR.style.display = "none";
         badge2fa.innerText = "Activo";
         badge2fa.className = "etiqueta-estado estado-activo";
@@ -93,7 +86,6 @@ btnConfirmar2FA.addEventListener('click', async () => {
     }
 });
 
-// Evento: Cerrar sesión
 btnCerrarSesion.addEventListener('click', async (evento) => {
     evento.preventDefault();
     try {
@@ -104,5 +96,4 @@ btnCerrarSesion.addEventListener('click', async (evento) => {
     }
 });
 
-// Ejecutamos la carga inicial
 cargarPerfil();

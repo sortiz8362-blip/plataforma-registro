@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/notificaciones.css">
     <style>
-        /* Estilos específicos para la zona del QR en el perfil */
         .caja-seguridad {
             margin-top: 25px;
             padding-top: 20px;
@@ -23,7 +22,7 @@
             text-align: left;
         }
         #contenedor-qr {
-            display: none; /* Oculto hasta que el usuario decida activarlo */
+            display: none; 
             text-align: center;
             margin-top: 15px;
         }
@@ -31,7 +30,24 @@
             border: 4px solid #fff;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        /* Nuevo estilo para la caja de la clave secreta */
+        .caja-clave-manual {
+            background-color: #f8fafc;
+            border: 1px dashed #94a3b8;
+            padding: 10px;
+            border-radius: 8px;
             margin-bottom: 15px;
+        }
+        .texto-clave {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #3b82f6;
+            letter-spacing: 1px;
+            word-break: break-all;
+            user-select: all; /* Permite seleccionar todo el texto con un solo clic */
         }
         .etiqueta-estado {
             display: inline-block;
@@ -61,13 +77,19 @@
         
         <div class="caja-seguridad">
             <h3 style="font-size: 16px; margin-bottom: 10px; color: #0f172a;">Autenticación en Dos Pasos (2FA)</h3>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Añade una capa extra de seguridad a tu cuenta usando una app como Google Authenticator.</p>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Añade una capa extra de seguridad a tu cuenta.</p>
             
             <button id="btn-iniciar-2fa" class="boton-acceso" style="width: 100%;">Configurar 2FA</button>
 
             <div id="contenedor-qr">
                 <img id="imagen-qr" src="" alt="Código QR para 2FA">
-                <p style="font-size: 13px; color: #475569; margin-bottom: 10px;">Escanea este código con tu aplicación y escribe el número de 6 dígitos abajo:</p>
+                
+                <div class="caja-clave-manual">
+                    <p style="font-size: 12px; color: #64748b; margin-bottom: 5px;">¿No puedes escanear? Ingresa esta clave:</p>
+                    <div id="texto-clave-secreta" class="texto-clave">Cargando...</div>
+                </div>
+
+                <p style="font-size: 13px; color: #475569; margin-bottom: 10px;">Escribe el código de 6 dígitos de tu app:</p>
                 
                 <div class="grupo-input">
                     <input type="text" id="codigo-2fa" placeholder="Ej: 123456" maxlength="6" style="text-align: center; letter-spacing: 4px; font-weight: bold; font-size: 18px;">
