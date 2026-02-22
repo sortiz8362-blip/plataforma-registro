@@ -1,51 +1,40 @@
-/* 1. ESTILOS DEL BODY (Fondo y Centrado)
-  Usamos Flexbox y el 100% del alto de la ventana (100vh) para 
-  asegurarnos de que la tarjeta de login quede perfectamente centrada.
-*/
+/* Centrado del body específico para autenticación */
 .body-auth {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    background-color: #f3f4f6; /* Un gris muy claro y elegante para el fondo */
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8fafc;
 }
 
-/* 2. LA TARJETA DEL FORMULARIO
-  Le damos un fondo blanco, bordes redondeados y una sombra 
-  para crear profundidad (efecto de elevación).
-*/
+/* Tarjeta principal del formulario */
 .contenedor-auth {
     background-color: #ffffff;
     width: 100%;
-    max-width: 400px; /* Evita que se estire demasiado en pantallas grandes */
-    padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+    padding: 45px 35px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     text-align: center;
 }
 
-/* Títulos y textos descriptivos */
 .contenedor-auth h1 {
-    margin: 0 0 10px 0;
-    color: #1f2937;
-    font-size: 24px;
+    margin: 0 0 8px 0;
+    color: #0f172a;
+    font-size: 26px;
 }
 
 .subtitulo {
-    color: #6b7280;
-    font-size: 14px;
-    margin-bottom: 25px;
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 30px;
 }
 
-/* 3. ESTRUCTURA DEL FORMULARIO
-  Usamos Flexbox en columna para apilar las etiquetas, los inputs y el botón.
-*/
+/* Estructura del formulario y inputs */
 .formulario {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Separación uniforme entre cada campo */
+    gap: 20px;
 }
 
 .grupo-input {
@@ -55,38 +44,33 @@
 }
 
 .grupo-input label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    color: #374151;
-    margin-bottom: 6px;
+    color: #475569;
+    margin-bottom: 8px;
 }
 
-/* 4. ESTILOS DE LOS INPUTS
-  Bordes sutiles, buen padding (espaciado interno) para que no se vean apretados, 
-  y una transición suave al hacer clic (focus).
-*/
 .grupo-input input {
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
     font-size: 15px;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .grupo-input input:focus {
-    border-color: #3b82f6; /* Color azul al seleccionar el input */
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Halo azul brillante */
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
-/* 5. EL BOTÓN PRINCIPAL
-*/
+/* Botón principal del formulario */
 .boton-principal {
     background-color: #3b82f6;
     color: white;
     border: none;
-    padding: 14px;
-    border-radius: 8px;
+    padding: 16px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -99,23 +83,27 @@
 }
 
 .boton-principal:active {
-    transform: scale(0.98); /* Pequeño efecto de hundimiento al hacer clic */
+    transform: scale(0.98);
 }
 
-/* 6. ENLACES SECUNDARIOS
-*/
+/* Enlaces inferiores */
 .enlaces-extra {
-    margin-top: 25px;
+    margin-top: 30px;
     font-size: 14px;
-    color: #6b7280;
+    color: #64748b;
 }
 
 .enlace-secundario {
-    display: block;
+    display: inline-block;
     margin-bottom: 15px;
-    color: #4b5563;
+    color: #64748b;
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.enlace-secundario:hover {
+    color: #0f172a;
 }
 
 .enlace-destacado {
@@ -124,6 +112,6 @@
     font-weight: 600;
 }
 
-.enlace-secundario:hover, .enlace-destacado:hover {
+.enlace-destacado:hover {
     text-decoration: underline;
 }

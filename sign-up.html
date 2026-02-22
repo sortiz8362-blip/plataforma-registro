@@ -7,18 +7,34 @@
     <link rel="stylesheet" href="styles/global.css">
     <link rel="stylesheet" href="styles/auth.css">
 </head>
-<body>
-    <h1>Únete a nosotros</h1>
-    
-    <form id="formulario-registro">
-        <input type="text" id="nombre" placeholder="Tu Nombre" required>
-        <input type="email" id="correo" placeholder="Tu Correo" required>
-        <input type="password" id="clave" placeholder="Tu Contraseña (min. 8 caracteres)" required minlength="8">
-        <button type="submit">Registrarse</button>
-    </form>
+<body class="body-auth">
+    <main class="contenedor-auth">
+        <h1>Únete a nosotros</h1>
+        <p class="subtitulo">Crea tu cuenta en segundos</p>
+        
+        <form id="formulario-registro" class="formulario">
+            <div class="grupo-input">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Tu Nombre" required>
+            </div>
+            
+            <div class="grupo-input">
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
+            </div>
+            
+            <div class="grupo-input">
+                <label for="clave">Contraseña</label>
+                <input type="password" id="clave" placeholder="Mínimo 8 caracteres" required minlength="8">
+            </div>
+            
+            <button type="submit" class="boton-principal">Registrarse</button>
+        </form>
 
-    <a href="home.html" class="boton-volver">Volver al Inicio</a>
-
-    <script type="module" src="scripts/registro-usuario.js"></script>
+        <div class="enlaces-extra">
+            <a href="home" class="enlace-secundario">Volver al Inicio</a>
+            <p>¿Ya tienes cuenta? <a href="sign-in" class="enlace-destacado">Inicia Sesión</a></p>
+        </div>
+    </main>
 </body>
 </html>

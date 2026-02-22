@@ -1,0 +1,74 @@
+/* Reseteo básico para todos los elementos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8fafc; /* Gris azulado muy claro */
+    color: #334155;
+}
+
+/* --- ESTILOS PARA HOME.HTML --- */
+.contenedor-principal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.contenedor-principal h1 {
+    font-size: 3rem;
+    color: #0f172a;
+    margin-bottom: 15px;
+}
+
+.contenedor-principal p {
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+/* Caja de botones del Home */
+.caja-botones {
+    display: flex;
+    gap: 20px;
+}
+
+.caja-botones a {
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.boton-acceso {
+    background-color: #ffffff;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+}
+
+.boton-acceso:hover {
+    background-color: #eff6ff;
+}
+
+.boton-registro {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+}
+
+.boton-registro:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+}
