@@ -35,13 +35,6 @@ btnIniciar2FA.addEventListener('click', async () => {
         btnIniciar2FA.innerText = "Preparando seguridad...";
         btnIniciar2FA.disabled = true;
 
-        // Limpiamos la base de datos de intentos fallidos anteriores
-        try {
-            await cuentaUsuario.deleteMfaAuthenticator('totp');
-        } catch (e) {
-            // Ignoramos si estaba limpio
-        }
-
         const autenticador = await cuentaUsuario.createMfaAuthenticator('totp');
         
         const urlImagenQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(autenticador.uri)}`;
@@ -74,9 +67,11 @@ btnConfirmar2FA.addEventListener('click', async () => {
         btnConfirmar2FA.innerText = "Verificando...";
         btnConfirmar2FA.disabled = true;
 
-        // AQUÍ ESTABA EL ERROR: El nombre correcto en v14 es updateMfaAuthenticator
+        // 1. Validamos el código de la app
         await cuentaUsuario.updateMfaAuthenticator('totp', codigoSecreto);
-        await cuentaUsuario.updateMfa(true);
+        
+        // 2. CORRECCIÓN: Encendemos la seguridad con la función en mayúsculas
+        await cuentaUsuario.updateMFA(true);
 
         contenedorQR.style.display = "none";
         badge2fa.innerText = "Activo";
@@ -85,13 +80,11 @@ btnConfirmar2FA.addEventListener('click', async () => {
         mostrarNotificacion("¡Seguridad 2FA activada con éxito!", "exito");
 
     } catch (error) {
-        // Ahora sí imprimimos el error real en la consola por seguridad
         console.error("Error real al verificar 2FA:", error); 
         
         btnConfirmar2FA.innerText = "Verificar y Activar";
         btnConfirmar2FA.disabled = false;
         
-        // Usamos nuestro traductor inteligente en lugar del texto fijo
         mostrarNotificacion(traducirError(error.message), "error");
     }
 });
