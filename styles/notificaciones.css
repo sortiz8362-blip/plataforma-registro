@@ -1,0 +1,52 @@
+/* Contenedor fijo en la esquina superior derecha */
+#contenedor-notificaciones {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Diseño de la tarjeta Toast */
+.notificacion {
+    min-width: 280px;
+    max-width: 380px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #334155;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    border-left: 6px solid #cbd5e1;
+    
+    /* Estado inicial fuera de la pantalla para la animación */
+    transform: translateX(120%);
+    animation: deslizarEntrada 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Colores según el tipo de mensaje */
+.notificacion.exito { border-left-color: #10b981; } /* Verde */
+.notificacion.error { border-left-color: #ef4444; } /* Rojo */
+.notificacion.info { border-left-color: #3b82f6; } /* Azul */
+
+/* Clase para animar la salida */
+.notificacion.ocultar {
+    animation: deslizarSalida 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Animaciones */
+@keyframes deslizarEntrada {
+    from { transform: translateX(120%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes deslizarSalida {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+}

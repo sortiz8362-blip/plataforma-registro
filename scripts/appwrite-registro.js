@@ -1,5 +1,6 @@
 import { cuentaUsuario } from './auth.js';
 import { ID } from "https://cdn.jsdelivr.net/npm/appwrite@14.0.0/+esm";
+import { mostrarNotificacion, traducirError } from './notificaciones.js';
 
 const formularioRegistro = document.getElementById('formulario-registro');
 
@@ -11,28 +12,25 @@ formularioRegistro.addEventListener('submit', async (evento) => {
     const clave = document.getElementById('clave').value;
 
     try {
-        // 1. Creamos el usuario
         await cuentaUsuario.create(ID.unique(), correo, clave, nombre);
-
-        // 2. Appwrite requiere que el usuario inicie sesión para enviarle el correo de verificación
         await cuentaUsuario.createEmailPasswordSession(correo, clave);
 
-        // 3. Generamos dinámicamente la URL base (sirve tanto para Live Server como para labs.saov.page)
         const urlVerificacion = window.location.origin + '/verificacion-correo.html';
-        
-        // 4. Solicitamos a Appwrite que envíe el correo
         await cuentaUsuario.createVerification(urlVerificacion);
 
-        alert("¡Registro exitoso! Te hemos enviado un correo para verificar tu cuenta. Por favor revisa tu bandeja de entrada.");
+        mostrarNotificacion("¡Registro exitoso! Revisa tu correo para verificar la cuenta.", "exito");
         
-        // 5. Cerramos la sesión temporal que abrimos en el paso 2
         await cuentaUsuario.deleteSession('current');
 
-        // Redirigimos al inicio de sesión
-        window.location.href = "sign-in.html";
+        // Retrasamos la redirección para que puedas ver el diseño del Toast
+        setTimeout(() => {
+            window.location.href = "sign-in.html";
+        }, 3000);
 
     } catch (error) {
-        console.error("Error al registrar:", error);
-        alert("Hubo un problema: " + error.message);
+        console.error("Error original de registro:", error);
+        // Usamos nuestro traductor para los errores como el de la contraseña débil
+        const mensajeTraducido = traducirError(error.message);
+        mostrarNotificacion(mensajeTraducido, "error");
     }
 });

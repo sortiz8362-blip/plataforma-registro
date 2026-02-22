@@ -1,4 +1,5 @@
 import { cuentaUsuario } from './auth.js';
+import { mostrarNotificacion, traducirError } from './notificaciones.js';
 
 const formularioLogin = document.getElementById('formulario-login');
 
@@ -9,24 +10,36 @@ formularioLogin.addEventListener('submit', async (evento) => {
     const clave = document.getElementById('clave-login').value;
 
     try {
-        // 1. Creamos la sesión con los datos ingresados
+        // SOLUCIÓN A TU PRIMER ERROR: Intentamos cerrar cualquier sesión fantasma antes de iniciar
+        try {
+            await cuentaUsuario.deleteSession('current');
+        } catch (e) {
+            // Ignoramos si da error aquí (significa que no había sesión, lo cual es lo ideal)
+        }
+
+        // 1. Creamos la sesión
         await cuentaUsuario.createEmailPasswordSession(correo, clave);
 
-        // 2. Obtenemos los datos del usuario activo para revisar su estado
+        // 2. Revisamos los datos del usuario
         const usuario = await cuentaUsuario.get();
 
-        // 3. Verificamos si el correo es real y fue confirmado
+        // 3. Verificamos el correo
         if (usuario.emailVerification === true) {
-            alert("¡Inicio de sesión exitoso!");
-            window.location.href = "home.html"; 
+            mostrarNotificacion("¡Inicio de sesión exitoso!", "exito");
+            
+            // Damos 1.5 segundos para que se vea la notificación antes de redirigir
+            setTimeout(() => {
+                window.location.href = "home.html"; 
+            }, 1500);
         } else {
-            // Si no ha verificado, mostramos alerta y cerramos la sesión por seguridad
-            alert("Tu correo aún no ha sido verificado. Por favor revisa tu bandeja de entrada o spam.");
+            mostrarNotificacion("Tu correo aún no ha sido verificado. Revisa tu bandeja.", "error");
             await cuentaUsuario.deleteSession('current');
         }
 
     } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        alert("Error al iniciar sesión: " + error.message);
+        console.error("Error original de login:", error);
+        // Usamos nuestro traductor para mostrar el mensaje en español
+        const mensajeTraducido = traducirError(error.message);
+        mostrarNotificacion(mensajeTraducido, "error");
     }
 });
