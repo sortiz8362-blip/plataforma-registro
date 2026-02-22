@@ -32,7 +32,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 10px;
         }
-        /* Nuevo estilo para la caja de la clave secreta */
         .caja-clave-manual {
             background-color: #f8fafc;
             border: 1px dashed #94a3b8;
@@ -47,7 +46,7 @@
             color: #3b82f6;
             letter-spacing: 1px;
             word-break: break-all;
-            user-select: all; /* Permite seleccionar todo el texto con un solo clic */
+            user-select: all; 
         }
         .etiqueta-estado {
             display: inline-block;
@@ -70,7 +69,7 @@
             <p><strong>Nombre:</strong> <span id="perfil-nombre">Cargando...</span></p>
             <p><strong>Correo:</strong> <span id="perfil-correo">Cargando...</span></p>
             <p style="margin-top: 10px;">
-                <strong>Estado 2FA:</strong> 
+                <strong>Estado 2FA (App):</strong> 
                 <span id="badge-2fa" class="etiqueta-estado estado-inactivo">Inactivo</span>
             </p>
         </div>
@@ -85,7 +84,7 @@
                 <img id="imagen-qr" src="" alt="Código QR para 2FA">
                 
                 <div class="caja-clave-manual">
-                    <p style="font-size: 12px; color: #64748b; margin-bottom: 5px;">¿No puedes escanear? Ingresa esta clave:</p>
+                    <p style="font-size: 12px; color: #64748b; margin-bottom: 5px;">¿No puedes escanear? Ingresa esta clave secreta:</p>
                     <div id="texto-clave-secreta" class="texto-clave">Cargando...</div>
                 </div>
 

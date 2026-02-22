@@ -11,8 +11,6 @@ const imagenQR = document.getElementById('imagen-qr');
 const inputCodigo = document.getElementById('codigo-2fa');
 const btnConfirmar2FA = document.getElementById('btn-confirmar-2fa');
 const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
-
-// NUEVO: Seleccionamos el elemento donde pondremos la clave de texto
 const textoClaveSecreta = document.getElementById('texto-clave-secreta');
 
 async function cargarPerfil() {
@@ -28,22 +26,28 @@ async function cargarPerfil() {
             btnIniciar2FA.style.display = "none";
         }
     } catch (error) {
-        console.error("No hay sesión activa:", error);
         window.location.href = "sign-in.html";
     }
 }
 
 btnIniciar2FA.addEventListener('click', async () => {
     try {
-        btnIniciar2FA.innerText = "Generando código...";
+        btnIniciar2FA.innerText = "Preparando seguridad...";
         btnIniciar2FA.disabled = true;
+
+        // EL SECRETO: Borramos cualquier intento fallido anterior en la base de datos
+        // para que no choque con el nuevo código que vamos a generar.
+        try {
+            await cuentaUsuario.deleteMfaAuthenticator('totp');
+        } catch (e) {
+            // No hacemos nada, significa que estaba limpio.
+        }
 
         const autenticador = await cuentaUsuario.createMfaAuthenticator('totp');
         
         const urlImagenQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(autenticador.uri)}`;
         imagenQR.src = urlImagenQR;
         
-        // NUEVO: Extraemos la clave secreta (secret) y la mostramos en la pantalla
         textoClaveSecreta.innerText = autenticador.secret;
         
         btnIniciar2FA.style.display = "none";
