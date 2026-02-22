@@ -35,12 +35,11 @@ btnIniciar2FA.addEventListener('click', async () => {
         btnIniciar2FA.innerText = "Preparando seguridad...";
         btnIniciar2FA.disabled = true;
 
-        // EL SECRETO: Borramos cualquier intento fallido anterior en la base de datos
-        // para que no choque con el nuevo código que vamos a generar.
+        // Limpiamos la base de datos de intentos fallidos anteriores
         try {
             await cuentaUsuario.deleteMfaAuthenticator('totp');
         } catch (e) {
-            // No hacemos nada, significa que estaba limpio.
+            // Ignoramos si estaba limpio
         }
 
         const autenticador = await cuentaUsuario.createMfaAuthenticator('totp');
@@ -56,6 +55,7 @@ btnIniciar2FA.addEventListener('click', async () => {
         mostrarNotificacion("Escanea el QR o copia la clave manual.", "info");
 
     } catch (error) {
+        console.error("Error al generar QR:", error);
         btnIniciar2FA.innerText = "Configurar 2FA";
         btnIniciar2FA.disabled = false;
         mostrarNotificacion(traducirError(error.message), "error");
@@ -74,7 +74,8 @@ btnConfirmar2FA.addEventListener('click', async () => {
         btnConfirmar2FA.innerText = "Verificando...";
         btnConfirmar2FA.disabled = true;
 
-        await cuentaUsuario.verifyMfaAuthenticator('totp', codigoSecreto);
+        // AQUÍ ESTABA EL ERROR: El nombre correcto en v14 es updateMfaAuthenticator
+        await cuentaUsuario.updateMfaAuthenticator('totp', codigoSecreto);
         await cuentaUsuario.updateMfa(true);
 
         contenedorQR.style.display = "none";
@@ -84,9 +85,14 @@ btnConfirmar2FA.addEventListener('click', async () => {
         mostrarNotificacion("¡Seguridad 2FA activada con éxito!", "exito");
 
     } catch (error) {
+        // Ahora sí imprimimos el error real en la consola por seguridad
+        console.error("Error real al verificar 2FA:", error); 
+        
         btnConfirmar2FA.innerText = "Verificar y Activar";
         btnConfirmar2FA.disabled = false;
-        mostrarNotificacion("Código incorrecto o expirado. Intenta de nuevo.", "error");
+        
+        // Usamos nuestro traductor inteligente en lugar del texto fijo
+        mostrarNotificacion(traducirError(error.message), "error");
     }
 });
 
